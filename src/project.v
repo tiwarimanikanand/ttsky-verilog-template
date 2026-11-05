@@ -1,27 +1,48 @@
 /*
- * Copyright (c) 2024 Your Name
- * SPDX-License-Identifier: Apache-2.0
+ * Tiny Tapeout wrapper for UNA: 8-bit CPU with an attached triangle rasterizer (GPU).
+ * Program memory is external: instruction bytes are fed in on ui_in.
+ *
+ * Pin map
+ *   ui_in[7:0]   -> INPUT[7:0]            instruction / data byte from the external ROM/RAM
+ *   uo_out[7:0]  -> DATAOUT[7:0]          data output (coordinate/data bus)
+ *   uio_out[5:0] -> OUTSIDECONTROL[5:0]   control lines for the external memory / peripherals
+ *   uio_out[6]   -> X                     GPU: DATAOUT carries an X coordinate
+ *   uio_out[7]   -> Y                     GPU: DATAOUT carries a Y coordinate
+ *   rst_n (active low) is inverted for the core, whose RST is active high.
  */
-
 `default_nettype none
 
-module tt_um_example (
+module tt_um_una_cpu_gpu (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
-    input  wire [7:0] uio_in,   // IOs: Input path
-    output wire [7:0] uio_out,  // IOs: Output path
-    output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
-    input  wire       ena,      // always 1 when the design is powered, so you can ignore it
-    input  wire       clk,      // clock
-    input  wire       rst_n     // reset_n - low to reset
+    input  wire [7:0] uio_in,   // IOs: input path (unused)
+    output wire [7:0] uio_out,  // IOs: output path
+    output wire [7:0] uio_oe,   // IOs: enable path (1 = output)
+    input  wire       ena,      // always 1 when the design is powered
+    input  wire       clk,
+    input  wire       rst_n
 );
 
-  // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
-  assign uio_out = 0;
-  assign uio_oe  = 0;
+  wire [7:0] s_dataout;
+  wire [5:0] s_outsidecontrol;
+  wire       s_x, s_y;
 
-  // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, 1'b0};
+  UNA core (
+      .CLK           (clk),
+      .RST           (~rst_n),
+      .INPUT         (ui_in),
+      .DATAOUT       (s_dataout),
+      .OUTSIDECONTROL(s_outsidecontrol),
+      .X             (s_x),
+      .Y             (s_y)
+  );
+
+  assign uo_out  = s_dataout;
+  assign uio_out = {s_y, s_x, s_outsidecontrol};
+  assign uio_oe  = 8'hFF;
+
+  wire _unused = &{ena, uio_in, 1'b0};
 
 endmodule
+
+`default_nettype wire
