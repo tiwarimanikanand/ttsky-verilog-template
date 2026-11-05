@@ -1,7 +1,7 @@
 # Tiny Tapeout project information
 project:
   title:        "UNA: 8-bit CPU with triangle GPU"      # Project title
-  author:       "YOUR NAME"      # Your name
+  author:       "Manikanand Tiwari"      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
   description:  "8-bit CPU with a built-in triangle rasterizer; program memory is external"      # One line description
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
