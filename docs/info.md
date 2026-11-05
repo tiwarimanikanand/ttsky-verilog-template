@@ -1,20 +1,25 @@
 <!---
-
-This file is used to generate your project datasheet. Please fill in the information below and delete any unused
-sections.
-
-You can also include images in this folder and reference them in the markdown. Each image must be less than
-512 kb in size, and the combined size of all images must be less than 1 MB.
+This file is used to generate your project datasheet.
 -->
 
 ## How it works
 
-Explain how your project works
+UNA is an 8-bit CPU with a built-in triangle rasterizer (GPU), exported from Logisim-evolution.
+There is no program memory on the chip. An external ROM/RAM supplies instruction and data bytes on
+`ui_in`. The CPU drives `uo_out` (data) and `uio_out[5:0]` (control lines for the external memory and
+peripherals). When the GPU draws, `uio_out[6]` (X) or `uio_out[7]` (Y) says that `uo_out` currently
+carries an X or a Y coordinate.
+
+Blocks: control unit (PLA-based sequencer), 16-entry register file, stack, ALU (add/subtract, multiply,
+divide, compare, pseudo-random number from an 8-bit LFSR), a programmable delay counter, and the GPU
+(vertex sorter, Bresenham edge units, horizontal fill).
 
 ## How to test
 
-Explain how to use your project
+Hold `rst_n` low for a few clock cycles, release it, then feed instruction bytes on `ui_in` from the
+external memory while watching `uo_out` and `uio_out`.
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+An external program/data memory (for example the RP2040 on the Tiny Tapeout demo board) that answers
+the `OUTSIDECONTROL` lines and presents instruction bytes on `ui_in`.
