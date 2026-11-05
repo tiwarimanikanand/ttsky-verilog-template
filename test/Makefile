@@ -6,7 +6,7 @@ SIM ?= icarus
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = project.v
+PROJECT_SOURCES = project.v ABSOLUTE.v ADDSUB.v AND_GATE.v AND_GATE_3_INPUTS.v AND_GATE_BUS.v Adder.v BRESENY.v Bresenham.v CNTRL.v Comparator.v DIVISION.v DLY.v Decoder_4.v Decoder_8.v FA.v GRAPHICSCARD.v HORIZONTAL.v LogisimCounter.v LogisimRNG.v MATH.v MULTIPLY.v Multiplexer_bus_16.v Multiplexer_bus_2.v Multiplexer_bus_4.v NOR_GATE_8_INPUTS.v OR_GATE.v OR_GATE_3_INPUTS.v OR_GATE_8_INPUTS.v OR_GATE_BUS.v PLA_PLA_1.v RAMCONTENTS_RAM_1.v REGISTERS.v REGISTER_FLIP_FLOP.v SHIFTREG_18_Classic.v SHIFTREG_3_Classic.v SORTSHIFT.v STCK.v SUBTRACTFORDIVIDE.v S_R_FLIPFLOP.v Shifter_11_bit.v Subtractor.v TRIANGLE.v UNA.v XOR_GATE_BUS_ONEHOT.v XOR_GATE_ONEHOT.v
 
 ifneq ($(GATES),yes)
 
